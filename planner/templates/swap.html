@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Swap {{ meal_key }} — Day {{ day_index }}</h2>
+  <p class="muted">Pick a replacement meal from the list below.</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="swap-list">
+      {% for m in candidates %}
+        <label class="swap-row">
+          <input type="radio" name="meal_.id" value="{{ m.id }}" {% if forloop.first %}checked{% endif %}>
+          <div class="swap-info">
+            <strong>{{ m.name }}</strong>
+            <div class="muted small">{{ m.calories }} kcal • P:{{ m.protein }}g • C:{{ m.carbs }}g • F:{{ m.fat }}g</div>
+          </div>
+        </label>
+      {% endfor %}
+    </div>
+
+    <div style="text-align:center; margin-top:12px;">
+      <button class="btn btn-primary" type="submit">Replace Meal</button>
+      <a class="btn btn-ghost" href="{% url 'view_plan' dp.id %}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

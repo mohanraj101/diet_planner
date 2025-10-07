@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero card">
+  <div class="hero-left">
+    <h2>Create a smart weekly diet plan</h2>
+    <p class="lead">Enter simple details — we generate a balanced, constraint-aware 7-day plan with nutrition summary. Works offline, no API keys.</p>
+    <ul class="feature-list">
+      <li><i class="fa-solid fa-check"></i> Personalized calorie & macro targets</li>
+      <li><i class="fa-solid fa-seedling"></i> Vegetarian / Non-veg options</li>
+      <li><i class="fa-solid fa-file-pdf"></i> Export to PDF & swap meals</li>
+    </ul>
+    <div class="cta-row">
+      <a href="#form-anchor" class="btn btn-primary" onclick="document.getElementById('top-form').scrollIntoView({behavior:'smooth'})">Get Started</a>
+      <a class="btn btn-ghost" href="/history/">View History</a>
+    </div>
+  </div>
+
+  <div class="hero-right card lighter">
+    <h3 class="small-title">Quick Input</h3>
+    <div id="top-form">
+      <form id="profileForm" method="post" novalidate>
+        {% csrf_token %}
+        <div class="grid-2">
+          {{ form.name.label_tag }} {{ form.name }}
+          {{ form.age.label_tag }} {{ form.age }}
+        </div>
+        <div class="grid-2">
+          {{ form.gender.label_tag }} {{ form.gender }}
+          {{ form.food_pref.label_tag }} {{ form.food_pref }}
+        </div>
+        <div class="grid-2">
+          {{ form.height.label_tag }} {{ form.height }}
+          {{ form.weight.label_tag }} {{ form.weight }}
+        </div>
+        <div class="grid-2">
+          {{ form.activity.label_tag }} {{ form.activity }}
+          {{ form.goal.label_tag }} {{ form.goal }}
+        </div>
+
+        <div class="form-extras">
+          <label class="muted">Health constraints (optional)</label>
+          {{ form.conditions }}
+        </div>
+
+        <div style="text-align:center; margin-top:14px;">
+          <button class="btn btn-primary fullwidth" type="submit">Generate 7-Day Plan</button>
+        </div>
+      </form>
+      <small class="muted">Tip: choose activity level carefully for accurate targets.</small>
+    </div>
+  </div>
+</section>
+
+<section class="info-grid">
+  <div class="tiny-card">
+    <h4><i class="fa-solid fa-heart-pulse"></i> Evidence-based</h4>
+    <p class="muted">Uses calorie & macro rules (BMR → TDEE) and constraint filters for special needs.</p>
+  </div>
+  <div class="tiny-card">
+    <h4><i class="fa-solid fa-bolt"></i> Fast & Offline</h4>
+    <p class="muted">Everything computed locally — stable for demo and submission.</p>
+  </div>
+  <div class="tiny-card">
+    <h4><i class="fa-solid fa-pen-to-square"></i> Editable plan</h4>
+    <p class="muted">Swap meals, recalc nutrition, export to PDF — great for viva demos.</p>
+  </div>
+</section>
+{% endblock %}

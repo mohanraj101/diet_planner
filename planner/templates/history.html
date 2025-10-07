@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Saved Plans</h2>
+  {% if plans %}
+    <div class="history-list">
+      {% for p in plans %}
+        <div class="history-item">
+          <div>
+            <strong>Plan #{{ p.id }} — {{ p.name }}</strong>
+            <div class="muted small">{{ p.created_at }}</div>
+          </div>
+          <div>
+            <a class="tiny-link" href="{% url 'view_plan' p.id %}">View</a>
+            <a class="tiny-link" href="{% url 'export_pdf' p.id %}">PDF</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">No plans yet. Create your first plan from the homepage.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="plan-header card">
+  <div>
+    <h2>{{ dp.name }} — Weekly Plan</h2>
+    <div class="muted small">Generated: {{ dp.created_at }}</div>
+    <pre class="profile-block">{{ profile|safe }}</pre>
+  </div>
+  <div class="plan-actions">
+    <a class="btn btn-outline" href="{% url 'export_pdf' dp.id %}"><i class="fa-solid fa-file-pdf"></i> Download PDF</a>
+    <a class="btn" href="/"><i class="fa-solid fa-arrow-left"></i> New Plan</a>
+  </div>
+</div>
+
+<div class="card">
+  <h3 style="text-align:center; font-size:28px; font-weight:800; color:var(--accent); text-shadow:0 3px 6px rgba(124,58,237,0.4); margin-bottom:20px;">Weekly Diet Plan</h3>
+  <table class="plan-table">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Breakfast</th>
+        <th>Lunch</th>
+        <th>Dinner</th>
+        <th>Snack</th>
+        <th>Daily Total (kcal)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for day, meals in plan.items %}
+      <tr>
+        <td>{{ day }}</td>
+        <td>
+          <div class="meal-name">{{ meals.Breakfast.name }}</div>
+          <div class="meal-cal">{{ meals.Breakfast.calories }} kcal</div>
+          <div class="meal-actions">
+            <a class="tiny-link" href="{% url 'swap_meal' dp.id forloop.counter 'Breakfast' %}">🔁 Swap</a>
+          </div>
+        </td>
+        <td>
+          <div class="meal-name">{{ meals.Lunch.name }}</div>
+          <div class="meal-cal">{{ meals.Lunch.calories }} kcal</div>
+          <div class="meal-actions">
+            <a class="tiny-link" href="{% url 'swap_meal' dp.id forloop.counter 'Lunch' %}">🔁 Swap</a>
+          </div>
+        </td>
+        <td>
+          <div class="meal-name">{{ meals.Dinner.name }}</div>
+          <div class="meal-cal">{{ meals.Dinner.calories }} kcal</div>
+          <div class="meal-actions">
+            <a class="tiny-link" href="{% url 'swap_meal' dp.id forloop.counter 'Dinner' %}">🔁 Swap</a>
+          </div>
+        </td>
+        <td>
+          <div class="meal-name">{{ meals.Snack.name }}</div>
+          <div class="meal-cal">{{ meals.Snack.calories }} kcal</div>
+          <div class="meal-actions">
+            <a class="tiny-link" href="{% url 'swap_meal' dp.id forloop.counter 'Snack' %}">🔁 Swap</a>
+          </div>
+        </td>
+        <td>{{ meals.Breakfast.calories|add:meals.Lunch.calories|add:meals.Dinner.calories|add:meals.Snack.calories }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card summary-section">
+  <h3 style="text-align:center; font-size:26px; font-weight:800; color:var(--accent2); text-shadow:0 2px 4px rgba(168,85,247,0.3); margin-bottom:15px;">Nutrition Summary</h3>
+  <div class="summary-grid">
+    <div class="stat">
+      <div class="stat-value">{{ summary.avg_daily_calories }} <small>kcal/day</small></div>
+      <div class="muted">Average daily calories</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ summary.total_protein }} g</div>
+      <div class="muted">Total protein (week)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ summary.total_carbs }} g</div>
+      <div class="muted">Total carbs (week)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ summary.total_fat }} g</div>
+      <div class="muted">Total fat (week)</div>
+    </div>
+  </div>
+
+  <canvas id="nutriChart" width="600" height="200"></canvas>
+</div>
+
+<script>
+const summary = {{ summary|safe }};
+const ctx = document.getElementById('nutriChart').getContext('2d');
+new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Protein', 'Carbs', 'Fat'],
+    datasets: [{
+      data: [summary.total_protein, summary.total_carbs, summary.total_fat],
+      backgroundColor: ['#60A5FA', '#FBBF24', '#F472B6']
+    }]
+  },
+  options: { responsive:true, maintainAspectRatio:false }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% load static %}
+
+SmartDiet Planner - {{ dp.name }}
+
+Generated: {{ dp.created_at }}
+Profile: {{ profile|safe }}
+
+{% for day, meals in plan.items %}
+{{ day }}
+
+  {% for meal, info in meals.items %}
+  {{ meal }}: {{ info.name }} ({{ info.calories }} kcal, Protein: {{ info.protein }}g, Carbs: {{ info.carbs }}g, Fat: {{ info.fat }}g)
+  {% endfor %}
+
+{% endfor %}
+
+Nutrition Summary
+Average Daily Calories: {{ summary.avg_daily_calories }} kcal
+Total Protein: {{ summary.total_protein }} g
+Total Carbs: {{ summary.total_carbs }} g
+Total Fat: {{ summary.total_fat }} g
+
+© {{ now.year }} SmartDiet Planner
